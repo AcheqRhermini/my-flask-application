@@ -1,0 +1,32 @@
+
+service: serverless-flask-api
+
+
+plugins:
+  - serverless-python-requirements
+  - serverless-wsgi
+custom:
+  wsgi:
+    app: app.app
+    packRequirements: false
+  pythonRequirements:
+    dockerizePip: non-linux
+
+
+provider:
+  name: aws
+  runtime: python3.7
+  region: eu-west-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+      Resource: "arn:aws:s3:::aws-iaas-pfr-acheq/*"
+
+functions:
+  app:
+    handler: wsgi_handler.handler
+    events:
+      - http:
+          path: MetaData-file-API
+          method: POST
