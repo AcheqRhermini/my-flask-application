@@ -87,6 +87,8 @@ def upload_file():
             #encoded_string = base64.b64encode(file.read().decode('utf-8'))
             output['File data']=encoded_string
             output['File Metadata']=metadata_png
+            s3 = boto3.client('s3')
+            s3.upload_fileobj(BytesIO(jsonify(output)), 'aws-iaas-pfr-acheq', file.name+'.json')
             return jsonify(output)
    
     else:
